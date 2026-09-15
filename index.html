@@ -1,0 +1,2340 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+        <meta name="theme-color" content="#1A0F0D">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <title>Fash Beats</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Plus Jakarta Sans', 'Poppins', 'Inter', 'system-ui', 'sans-serif']
+                        }
+                    }
+                }
+            };
+        </script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+        <style>
+            :root {
+                --color-black: #000000;
+                --color-background-dark: #1A0F0D;
+                --color-surface-dark: #2A1815;
+                --color-chip-bg: #3D2621;
+                --color-accent: #E8846B;
+                --color-accent-soft: #F2A895;
+                --color-text-primary: #FFFFFF;
+                --color-text-secondary: #B8A29C;
+            }
+
+            * {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            html, body {
+                height: 100%;
+            }
+
+            body {
+                font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+                background: var(--color-background-dark);
+                color: var(--color-text-primary);
+                overscroll-behavior-y: none;
+                -webkit-font-smoothing: antialiased;
+                text-rendering: optimizeLegibility;
+                margin: 0;
+                padding: 0;
+            }
+
+            svg.lucide {
+                stroke-width: 2.25;
+            }
+
+            .glass {
+                background: rgba(42,24,21,0.82);
+                backdrop-filter: saturate(180%) blur(24px);
+                -webkit-backdrop-filter: saturate(180%) blur(24px);
+            }
+
+            .glass-light {
+                background: rgba(61,38,33,0.45);
+                backdrop-filter: saturate(180%) blur(20px);
+                -webkit-backdrop-filter: saturate(180%) blur(20px);
+            }
+
+            .glass-dark {
+                background: rgba(0,0,0,0.65);
+                backdrop-filter: saturate(180%) blur(30px);
+                -webkit-backdrop-filter: saturate(180%) blur(30px);
+            }
+
+            .ambient {
+                position: absolute;
+                inset: -20%;
+                background-size: cover;
+                background-position: center;
+                filter: blur(90px) saturate(1.9) brightness(0.5);
+                opacity: 0.85;
+                transition: background-image 1s ease-in-out;
+                z-index: 0;
+                transform: scale(1.2);
+                animation: ambientFloat 20s ease-in-out infinite;
+                will-change: transform;
+            }
+
+            @keyframes ambientFloat {
+                0%,100% {
+                    transform: scale(1.2) translate(0,0);
+                }
+
+                33% {
+                    transform: scale(1.25) translate(-2%,-1%);
+                }
+
+                66% {
+                    transform: scale(1.22) translate(2%,1%);
+                }
+            }
+
+            .glossy {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .glossy::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 40%);
+                pointer-events: none;
+                border-radius: inherit;
+            }
+
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            #progressBar, #volumeBar {
+                -webkit-appearance: none;
+                appearance: none;
+                background: transparent;
+                outline: none;
+            }
+
+            #progressBar::-webkit-slider-runnable-track {
+                height: 6px;
+                background: rgba(232,132,107,0.25);
+                border-radius: 999px;
+            }
+
+            #progressBar::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                height: 12px;
+                width: 12px;
+                background: var(--color-accent);
+                border-radius: 50%;
+                margin-top: -3px;
+                box-shadow: 0 0 8px rgba(232,132,107,0.6);
+            }
+
+            #progressBar::-moz-range-track {
+                height: 6px;
+                background: rgba(232,132,107,0.25);
+                border-radius: 999px;
+            }
+
+            #progressBar::-moz-range-thumb {
+                height: 12px;
+                width: 12px;
+                background: var(--color-accent);
+                border: none;
+                border-radius: 50%;
+            }
+
+            #volumeBar::-webkit-slider-runnable-track {
+                height: 4px;
+                background: rgba(232,132,107,0.2);
+                border-radius: 999px;
+            }
+
+            #volumeBar::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                height: 10px;
+                width: 10px;
+                background: var(--color-accent);
+                border-radius: 50%;
+                margin-top: -3px;
+            }
+
+            #volumeBar::-moz-range-thumb {
+                height: 10px;
+                width: 10px;
+                background: var(--color-accent);
+                border: none;
+                border-radius: 50%;
+            }
+
+            .lyric-scroll {
+                will-change: transform;
+                transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .playing-bars {
+                display: inline-flex;
+                align-items: flex-end;
+                gap: 2px;
+                height: 12px;
+            }
+
+            .playing-bars span {
+                width: 2.5px;
+                background: var(--color-accent);
+                border-radius: 2px;
+                animation: playingBar 0.9s ease-in-out infinite;
+            }
+
+            .playing-bars span:nth-child(1) {
+                animation-delay: 0s;
+            }
+
+            .playing-bars span:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+
+            .playing-bars span:nth-child(3) {
+                animation-delay: 0.4s;
+            }
+
+            @keyframes playingBar {
+                0%,100% {
+                    height: 4px;
+                }
+
+                50% {
+                    height: 12px;
+                }
+            }
+
+            @keyframes spinSlow {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .animate-spin-slow {
+                animation: spinSlow 20s linear infinite;
+            }
+
+            @keyframes splashLogo {
+                0% {
+                    transform: scale(0.3) rotate(-180deg);
+                    opacity: 0;
+                }
+
+                50% {
+                    transform: scale(1.1) rotate(10deg);
+                    opacity: 1;
+                }
+
+                100% {
+                    transform: scale(1) rotate(0deg);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes splashText {
+                0% {
+                    transform: translateY(30px);
+                    opacity: 0;
+                    letter-spacing: 0.5em;
+                }
+
+                100% {
+                    transform: translateY(0);
+                    opacity: 1;
+                    letter-spacing: 0;
+                }
+            }
+
+            @keyframes splashTag {
+                0% {
+                    transform: translateY(20px);
+                    opacity: 0;
+                }
+
+                100% {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes ringPulse {
+                0% {
+                    transform: scale(1);
+                    opacity: 0.6;
+                }
+
+                100% {
+                    transform: scale(2.4);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes floatingOrb {
+                0%,100% {
+                    transform: translate(0,0) scale(1);
+                }
+
+                33% {
+                    transform: translate(30px,-30px) scale(1.1);
+                }
+
+                66% {
+                    transform: translate(-20px,20px) scale(0.9);
+                }
+            }
+
+            @keyframes particleRise {
+                0% {
+                    transform: translateY(100vh) scale(0.5);
+                    opacity: 0;
+                }
+
+                20% {
+                    opacity: 0.6;
+                }
+
+                100% {
+                    transform: translateY(-20vh) scale(1);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes shimmerBar {
+                0% {
+                    transform: translateX(-100%);
+                }
+
+                100% {
+                    transform: translateX(200%);
+                }
+            }
+
+            @keyframes equalizerBounce {
+                0%, 100% {
+                    height: 6px;
+                    opacity: 0.5;
+                }
+
+                50% {
+                    height: 28px;
+                    opacity: 1;
+                }
+            }
+
+            .splash-logo {
+                animation: splashLogo 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            }
+
+            .splash-text {
+                animation: splashText 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+                opacity: 0;
+            }
+
+            .splash-tag {
+                animation: splashTag 0.8s ease-out 0.8s forwards;
+                opacity: 0;
+            }
+
+            .splash-ring {
+                position: absolute;
+                inset: 0;
+                border-radius: 999px;
+                border: 2px solid var(--color-accent);
+                opacity: 0.35;
+                animation: ringPulse 2.5s ease-out infinite;
+            }
+
+            .splash-ring:nth-child(2) {
+                animation-delay: 0.8s;
+            }
+
+            .splash-ring:nth-child(3) {
+                animation-delay: 1.6s;
+            }
+
+            .splash-orb {
+                position: absolute;
+                border-radius: 999px;
+                filter: blur(60px);
+                opacity: 0.22;
+                animation: floatingOrb 12s ease-in-out infinite;
+            }
+
+            .splash-particle {
+                position: absolute;
+                width: 3px;
+                height: 3px;
+                background: var(--color-accent);
+                border-radius: 999px;
+                box-shadow: 0 0 8px var(--color-accent);
+                animation: particleRise linear infinite;
+            }
+
+            .skeleton {
+                background: linear-gradient(90deg, #2A1815 0%, #3D2621 50%, #2A1815 100%);
+                background-size: 200% 100%;
+                animation: shimmer 1.5s infinite;
+            }
+
+            @keyframes shimmer {
+                0% {
+                    background-position: -200% 0;
+                }
+
+                100% {
+                    background-position: 200% 0;
+                }
+            }
+
+            .upnext-item {
+                transition: all 0.25s ease;
+            }
+
+            .upnext-item:active {
+                transform: scale(0.98);
+            }
+
+            .action-active {
+                color: var(--color-accent) !important;
+            }
+
+            .action-inactive {
+                color: rgba(184,162,156,0.55) !important;
+            }
+
+            .cover-glow {
+                position: absolute;
+                inset: -20px;
+                border-radius: 32px;
+                background: radial-gradient(circle at 50% 50%, rgba(232,132,107,0.35) 0%, transparent 70%);
+                filter: blur(30px);
+                z-index: -1;
+                animation: coverPulse 4s ease-in-out infinite;
+            }
+
+            @keyframes coverPulse {
+                0%,100% {
+                    opacity: 0.6;
+                    transform: scale(0.98);
+                }
+
+                50% {
+                    opacity: 1;
+                    transform: scale(1.02);
+                }
+            }
+
+            .font-option.active, .bar-option.active {
+                background: rgba(232,132,107,0.15) !important;
+                border: 1px solid rgba(232,132,107,0.5) !important;
+                color: #fff !important;
+                box-shadow: 0 0 20px rgba(232,132,107,0.2);
+            }
+
+            .bar-option.active svg path, .bar-option.active > div {
+                filter: drop-shadow(0 0 6px rgba(232,132,107,0.7));
+            }
+
+            .lang-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 16px;
+                cursor: pointer;
+                transition: background 0.15s ease;
+                border-bottom: 1px solid rgba(184,162,156,0.08);
+            }
+
+            .lang-item:last-child {
+                border-bottom: none;
+            }
+
+            .lang-item:hover, .lang-item:active {
+                background: rgba(232,132,107,0.08);
+            }
+
+            .lang-item.selected {
+                background: rgba(232,132,107,0.15);
+            }
+
+            body.no-liquid-glass .glass, body.no-liquid-glass .glass-light, body.no-liquid-glass .glass-dark {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: rgba(26,15,13,0.98) !important;
+            }
+
+            body.font-poppins {
+                font-family: 'Poppins', -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
+            }
+
+            body.font-inter {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
+            }
+
+            #progressBar.bar-slim {
+                height: 2px;
+            }
+
+            #progressBar.bar-slim::-webkit-slider-runnable-track {
+                height: 2px !important;
+            }
+
+            #progressBar.bar-slim::-webkit-slider-thumb {
+                height: 8px !important;
+                width: 8px !important;
+                margin-top: -3px !important;
+            }
+
+            #progressBar.bar-squiggly {
+                height: 8px;
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 8' preserveAspectRatio='none'><path d='M0 4 Q2.5 0, 5 4 T10 4 T15 4 T20 4 T25 4 T30 4 T35 4 T40 4' fill='none' stroke='rgba(232,132,107,0.4)' stroke-width='1.5'/></svg>");
+                background-size: 40px 8px;
+                background-repeat: repeat-x;
+            }
+
+            #progressBar.bar-squiggly::-webkit-slider-runnable-track {
+                height: 8px !important;
+                background: transparent !important;
+            }
+
+            #progressBar.bar-squiggly::-webkit-slider-thumb {
+                height: 12px !important;
+                width: 12px !important;
+                margin-top: -2px !important;
+                background: var(--color-accent) !important;
+                box-shadow: 0 0 10px rgba(232,132,107,1);
+            }
+
+            @keyframes slideDownLang {
+                from {
+                    opacity: 0;
+                    transform: translateY(-8px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            #languageDropdown:not(.hidden) {
+                animation: slideDownLang 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .sheet-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.6);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                z-index: 120;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+
+            .sheet-backdrop.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .bottom-sheet {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 130;
+                transform: translateY(100%);
+                transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+                padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+                max-width: 500px;
+                margin: 0 auto;
+                pointer-events: none;
+            }
+
+            .bottom-sheet.show {
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .sheet-handle {
+                width: 36px;
+                height: 4px;
+                background: rgba(184,162,156,0.3);
+                border-radius: 999px;
+                margin: 0 auto 12px;
+            }
+
+            .sheet-item {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 14px 18px;
+                border-radius: 16px;
+                cursor: pointer;
+                transition: background 0.15s ease;
+            }
+
+            .sheet-item:hover, .sheet-item:active {
+                background: rgba(232,132,107,0.08);
+            }
+
+            .sheet-item.danger {
+                color: var(--color-text-secondary);
+            }
+
+            .sheet-item .icon-box {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(61,38,33,0.6);
+                flex-shrink: 0;
+                color: var(--color-accent-soft);
+            }
+
+            .sleep-option {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 18px;
+                border-radius: 16px;
+                cursor: pointer;
+                transition: background 0.15s ease;
+                border: 1px solid transparent;
+            }
+
+            .sleep-option:hover, .sleep-option:active {
+                background: rgba(232,132,107,0.08);
+            }
+
+            .sleep-option.active {
+                background: rgba(232,132,107,0.15);
+                border-color: rgba(232,132,107,0.5);
+            }
+
+            .sleep-countdown {
+                position: fixed;
+                top: calc(1rem + env(safe-area-inset-top));
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 200;
+                padding: 8px 16px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+                color: var(--color-accent-soft);
+            }
+
+            .sleep-countdown.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .toast-notif {
+                position: fixed;
+                bottom: 32px;
+                left: 50%;
+                transform: translateX(-50%) translateY(20px);
+                padding: 10px 18px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 800;
+                z-index: 300;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+                color: var(--color-accent-soft);
+            }
+
+            .toast-notif.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .speed-dial-item {
+                transition: all 0.25s ease;
+            }
+
+            .speed-dial-item:active {
+                transform: scale(0.95);
+            }
+
+            .home-hero {
+                background-image: url('https://cloud.yardansh.com/3UsGL7.png?raw');
+                background-size: cover;
+                background-position: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .home-hero::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(26,15,13,0.92) 0%, rgba(42,24,21,0.75) 50%, rgba(232,132,107,0.25) 100%);
+                z-index: 1;
+            }
+
+            .home-hero > * {
+                position: relative;
+                z-index: 2;
+            }
+
+            .offline-page {
+                position: fixed;
+                inset: 0;
+                z-index: 90;
+                background: var(--color-background-dark);
+                transform: translateX(100%);
+                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+                overflow-y: auto;
+                padding-bottom: 6rem;
+            }
+
+            .offline-page.show {
+                transform: translateX(0);
+            }
+
+            .user-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                padding: 3px 9px;
+                border-radius: 999px;
+                font-size: 9px;
+                font-weight: 900;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--color-accent-soft);
+                border: 1px solid rgba(232,132,107,0.35);
+                background: rgba(232,132,107,0.1);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                white-space: nowrap;
+                line-height: 1.4;
+            }
+
+            .user-badge svg {
+                width: 10px;
+                height: 10px;
+            }
+
+            .device-id-chip {
+                font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+                font-size: 10px;
+                padding: 4px 10px;
+                border-radius: 8px;
+                background: rgba(0,0,0,0.4);
+                border: 1px solid rgba(232,132,107,0.2);
+                word-break: break-all;
+                letter-spacing: 0.02em;
+                color: var(--color-text-secondary);
+            }
+
+            .swal2-popup {
+                border-radius: 24px !important;
+                border: 1px solid rgba(232,132,107,0.2) !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                background: var(--color-surface-dark) !important;
+                color: var(--color-text-primary) !important;
+            }
+
+            .swal2-title {
+                font-size: 18px !important;
+                font-weight: 900 !important;
+                color: var(--color-text-primary) !important;
+            }
+
+            .swal2-html-container {
+                font-size: 13px !important;
+                color: var(--color-text-secondary) !important;
+            }
+
+            .swal2-confirm {
+                background: var(--color-accent) !important;
+                color: #fff !important;
+                font-weight: 800 !important;
+            }
+
+            .swal2-cancel {
+                background: var(--color-chip-bg) !important;
+                color: var(--color-text-secondary) !important;
+                font-weight: 800 !important;
+            }
+
+            .text-red-600, .text-red-500, .text-red-400 {
+                color: var(--color-accent) !important;
+            }
+
+            .bg-red-600 {
+                background: var(--color-accent) !important;
+                color: #fff !important;
+            }
+
+            .bg-red-600\/10 {
+                background: rgba(232,132,107,0.12) !important;
+            }
+
+            .bg-red-600\/20 {
+                background: rgba(232,132,107,0.2) !important;
+            }
+
+            .border-red-600, .border-red-600\/30, .border-red-600\/40, .border-red-500\/40 {
+                border-color: rgba(232,132,107,0.4) !important;
+            }
+
+            .hover\:bg-red-500:hover {
+                background: var(--color-accent-soft) !important;
+                color: #000 !important;
+            }
+
+            .hover\:bg-red-600\/20:hover {
+                background: rgba(232,132,107,0.25) !important;
+            }
+
+            .focus\:border-red-600:focus {
+                border-color: var(--color-accent) !important;
+            }
+
+            .focus\:ring-red-600\/20:focus {
+                --tw-ring-color: rgba(232,132,107,0.25) !important;
+            }
+
+            #repeatBadge {
+                background: var(--color-accent) !important;
+                color: #fff !important;
+            }
+
+            body.low-device-mode .ambient, body.low-device-mode .cover-glow, body.low-device-mode .splash-orb, body.low-device-mode .splash-ring, body.low-device-mode .splash-particle {
+                display: none !important;
+            }
+
+            body.low-device-mode .glass, body.low-device-mode .glass-light, body.low-device-mode .glass-dark {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: rgba(26,15,13,0.98) !important;
+            }
+
+            body.low-device-mode .glossy::after {
+                display: none !important;
+            }
+
+            body.low-device-mode *, body.low-device-mode *::before, body.low-device-mode *::after {
+                animation-duration: 0.001s !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.08s !important;
+            }
+
+            body.low-device-mode .home-hero {
+                background-image: none !important;
+                background: var(--color-background-dark) !important;
+            }
+
+            body.low-device-mode .playing-bars span {
+                animation: none !important;
+                height: 8px;
+            }
+
+            .lyric-line {
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                will-change: transform, filter, opacity;
+            }
+
+            .lyric-line .lyric-text {
+                color: rgba(184,162,156,0.4);
+                font-weight: 700;
+                font-size: 1.05rem;
+                line-height: 1.5;
+                transform-origin: center left;
+                transition: color var(--lyric-bounce-smooth) cubic-bezier(0.34, 1.56, 0.64, 1), transform var(--lyric-bounce-smooth) cubic-bezier(0.34, 1.56, 0.64, 1), filter var(--lyric-bounce-smooth) ease, opacity var(--lyric-bounce-smooth) ease;
+            }
+
+            .lyric-line.line-past .lyric-text {
+                color: rgba(184,162,156,0.28);
+                transform: scale(0.96);
+                opacity: 0.55;
+            }
+
+            .lyric-line.line-future .lyric-text {
+                color: rgba(184,162,156,0.4);
+                transform: scale(0.98);
+                opacity: 0.7;
+            }
+
+            .lyric-line.line-active .lyric-text {
+                color: #fff !important;
+                font-weight: 900;
+                transform: scale(1.05);
+                opacity: 1;
+                filter: drop-shadow(0 0 20px rgba(232,132,107,0.7));
+                -webkit-text-fill-color: #fff;
+            }
+
+            @keyframes lyricV2BounceIn {
+                0% {
+                    transform: translateY(22px) scale(0.9);
+                    opacity: 0;
+                }
+
+                55% {
+                    transform: translateY(-5px) scale(1.07);
+                    opacity: 1;
+                }
+
+                100% {
+                    transform: translateY(0) scale(1.05);
+                    opacity: 1;
+                }
+            }
+
+            body.lyric-bounce-on .lyric-line.line-active .lyric-text {
+                animation: lyricV2BounceIn var(--lyric-bounce-smooth) cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+
+            body.lyric-bounce-off .lyric-line.line-active .lyric-text {
+                animation: none;
+            }
+
+            .lyric-word {
+                display: inline-block;
+                color: rgba(184,162,156,0.45);
+                transition: color var(--lyric-fill-smooth) linear, text-shadow var(--lyric-fill-smooth) linear, transform calc(var(--lyric-fill-smooth) * 0.8) ease;
+                will-change: color, text-shadow, transform;
+            }
+
+            .lyric-line.line-active .lyric-word {
+                color: rgba(184,162,156,0.45);
+            }
+
+            .lyric-line.line-active .lyric-word.word-sung {
+                color: var(--color-accent-soft);
+                text-shadow: 0 0 14px rgba(232,132,107,0.9);
+            }
+
+            .lyric-line.line-active .lyric-word.word-active {
+                color: var(--color-accent);
+                transform: scale(1.06);
+                text-shadow: 0 0 22px rgba(232,132,107,1), 0 0 44px rgba(232,132,107,0.55);
+            }
+
+            .lyric-word-bg {
+                font-size: 0.85em;
+                opacity: 0.7;
+                font-weight: 500;
+            }
+
+            .marquee-box {
+                overflow: hidden;
+                white-space: nowrap;
+                position: relative;
+                mask-image: linear-gradient(90deg, transparent 0, #000 8px, #000 calc(100% - 8px), transparent 100%);
+                -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8px, #000 calc(100% - 8px), transparent 100%);
+            }
+
+            .marquee-inner {
+                display: inline-flex;
+                animation: marqueeScroll 14s linear infinite;
+                will-change: transform;
+            }
+
+            .marquee-inner > span {
+                flex: 0 0 auto;
+                padding-right: 32px;
+            }
+
+            .marquee-inner.marquee-slow {
+                animation-duration: 22s;
+            }
+
+            .marquee-inner.marquee-fast {
+                animation-duration: 9s;
+            }
+
+            .marquee-box:hover .marquee-inner {
+                animation-play-state: paused;
+            }
+
+            @keyframes marqueeScroll {
+                from {
+                    transform: translateX(0);
+                }
+
+                to {
+                    transform: translateX(-50%);
+                }
+            }
+
+            body.low-device-mode .marquee-inner {
+                animation: none;
+            }
+
+            .quick-pick-card {
+                flex: 0 0 auto;
+                width: 200px;
+                min-width: 200px;
+            }
+
+            @media (min-width: 640px) {
+                .quick-pick-card {
+                    width: 240px;
+                    min-width: 240px;
+                }
+            }
+
+            @media (min-width: 768px) {
+                .quick-pick-card {
+                    width: 280px;
+                    min-width: 280px;
+                }
+            }
+
+            @media (min-width: 1024px) {
+                .quick-pick-card {
+                    width: 320px;
+                    min-width: 320px;
+                }
+            }
+
+            .quick-pick-thumb {
+                aspect-ratio: 1 / 1;
+                border-radius: 24px;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+                transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .quick-pick-card:hover .quick-pick-thumb {
+                transform: translateY(-4px);
+            }
+
+            .quick-pick-title {
+                font-size: 15px;
+                font-weight: 900;
+                letter-spacing: -0.01em;
+            }
+
+            .quick-pick-artist {
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--color-text-secondary);
+            }
+
+            .quick-pick-skeleton {
+                flex: 0 0 auto;
+                width: 200px;
+                min-width: 200px;
+                aspect-ratio: 1 / 1;
+                border-radius: 24px;
+            }
+
+            @media (min-width: 640px) {
+                .quick-pick-skeleton {
+                    width: 240px;
+                    min-width: 240px;
+                }
+            }
+
+            @media (min-width: 768px) {
+                .quick-pick-skeleton {
+                    width: 280px;
+                    min-width: 280px;
+                }
+            }
+
+            .update-banner {
+                position: fixed;
+                top: calc(1rem + env(safe-area-inset-top));
+                left: 50%;
+                transform: translateX(-50%) translateY(-140%);
+                max-width: 440px;
+                width: calc(100% - 2rem);
+                z-index: 250;
+                padding: 16px 18px 14px;
+                border-radius: 22px;
+                background: rgba(42,24,21,0.98);
+                border: 1px solid rgba(232,132,107,0.25);
+                backdrop-filter: saturate(180%) blur(28px);
+                -webkit-backdrop-filter: saturate(180%) blur(28px);
+                box-shadow: 0 24px 64px rgba(0,0,0,0.75), 0 0 0 1px rgba(232,132,107,0.08) inset;
+                opacity: 0;
+                transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+                pointer-events: none;
+            }
+
+            .update-banner.show {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .update-close {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: rgba(232,132,107,0.12);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--color-accent-soft);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: none;
+            }
+
+            .update-close:hover {
+                background: rgba(232,132,107,0.25);
+                color: #fff;
+                transform: rotate(90deg);
+            }
+
+            .update-icon {
+                width: 42px;
+                height: 42px;
+                border-radius: 12px;
+                background: rgba(232,132,107,0.15);
+                border: 1px solid rgba(232,132,107,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--color-accent);
+                flex-shrink: 0;
+            }
+
+            .update-chip {
+                display: inline-flex;
+                align-items: center;
+                font-size: 9px;
+                font-weight: 900;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                padding: 3px 9px;
+                border-radius: 999px;
+                background: var(--color-accent);
+                color: #fff;
+            }
+
+            .update-time {
+                font-size: 10px;
+                font-weight: 700;
+                color: var(--color-text-secondary);
+                letter-spacing: 0.02em;
+            }
+
+            .update-title {
+                font-size: 14.5px;
+                font-weight: 900;
+                color: #fff;
+                margin-top: 8px;
+                letter-spacing: -0.01em;
+                padding-right: 30px;
+            }
+
+            .update-list {
+                margin-top: 10px;
+                padding-left: 16px;
+                list-style: disc;
+                color: var(--color-text-secondary);
+                font-size: 11.5px;
+                line-height: 1.7;
+            }
+
+            .update-list li::marker {
+                color: var(--color-accent);
+            }
+
+            .artist-card {
+                flex: 0 0 auto;
+                width: 92px;
+            }
+
+            .artist-avatar {
+                width: 92px;
+                height: 92px;
+                border-radius: 999px;
+                object-fit: cover;
+                border: 2px solid rgba(232,132,107,0.3);
+                box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            }
+
+            .artist-name {
+                font-size: 11px;
+                font-weight: 800;
+                text-align: center;
+                margin-top: 8px;
+            }
+
+            .recent-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 8px;
+                border-radius: 12px;
+                transition: background 0.15s ease;
+            }
+
+            .recent-item:hover, .recent-item:active {
+                background: rgba(232,132,107,0.08);
+            }
+
+            .lib-tab.active {
+                background: rgba(232,132,107,0.2);
+                color: #fff;
+                border: 1px solid rgba(232,132,107,0.4);
+            }
+
+            .lib-tab {
+                background: rgba(61,38,33,0.4);
+                color: var(--color-text-secondary);
+                border: 1px solid rgba(184,162,156,0.1);
+            }
+
+            .loader-eq {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                height: 32px;
+            }
+
+            .loader-eq span {
+                width: 4px;
+                background: var(--color-accent);
+                border-radius: 4px;
+                animation: equalizerBounce 1.2s ease-in-out infinite;
+            }
+
+            .loader-eq span:nth-child(1) {
+                animation-delay: 0s;
+            }
+
+            .loader-eq span:nth-child(2) {
+                animation-delay: 0.15s;
+            }
+
+            .loader-eq span:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+
+            .loader-eq span:nth-child(4) {
+                animation-delay: 0.45s;
+            }
+
+            .loader-eq span:nth-child(5) {
+                animation-delay: 0.6s;
+            }
+        </style>
+    </head>
+    <body class="bg-[#1A0F0D] text-white min-h-screen flex flex-col overflow-x-hidden">
+        <div id="welcomeOverlay" class="fixed inset-0 z-[100] bg-[#1A0F0D] flex flex-col items-center justify-center overflow-hidden transition-all duration-700 ease-in-out">
+            <div class="splash-orb" style="width:300px;height:300px;background:#E8846B;top:10%;left:5%"></div>
+            <div class="splash-orb" style="width:250px;height:250px;background:#F2A895;bottom:15%;right:5%;animation-delay:3s"></div>
+            <div class="splash-orb" style="width:200px;height:200px;background:#3D2621;top:50%;left:50%;animation-delay:6s"></div>
+            <div id="splashParticles" class="absolute inset-0 pointer-events-none"></div>
+            <div class="relative flex flex-col items-center">
+                <div class="relative w-32 h-32 mb-8 flex items-center justify-center">
+                    <div class="splash-ring"></div>
+                    <div class="splash-ring"></div>
+                    <div class="splash-ring"></div>
+                    <div class="w-24 h-24 rounded-3xl overflow-hidden splash-logo shadow-2xl border-2 border-[#E8846B]/50 flex items-center justify-center bg-[#2A1815]">
+                        <img src="https://cloud.yardansh.com/znNBqH.png?raw" alt="Fash Beats" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.innerHTML='<i data-lucide=\'music\' class=\'w-10 h-10 text-[#E8846B]\'></i>';if(window.lucide)lucide.createIcons();">
+                    </div>
+                </div>
+                <h1 class="text-5xl font-black tracking-tight splash-text text-white">
+                    Fash<span class="text-[#E8846B]">Beats</span>
+                </h1>
+                <div id="welcomeUserBadge" class="user-badge mt-4 splash-tag">
+                    <i data-lucide="star"></i>
+                    <span>Pro User</span>
+                </div>
+                <p class="text-[10px] font-black text-[#B8A29C] mt-3 tracking-[0.4em] uppercase splash-tag">Pemutar Musik</p>
+                <div class="mt-6 splash-tag loader-eq">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+        <header class="sticky top-0 z-30 glass border-b border-[#3D2621] px-4 md:px-8 py-3 flex items-center justify-between" style="padding-top:calc(0.75rem + env(safe-area-inset-top))">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="playSwishSFX();switchTab('home')">
+                <div class="w-9 h-9 rounded-2xl overflow-hidden shadow-lg flex items-center justify-center bg-[#2A1815] border border-[#E8846B]/30">
+                    <img src="https://cloud.yardansh.com/znNBqH.png?raw" alt="logo" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.innerHTML='<i data-lucide=\'music\' class=\'w-4 h-4 text-[#E8846B]\'></i>';if(window.lucide)lucide.createIcons();">
+                </div>
+                <span class="font-black text-xl tracking-tight text-white">
+                    Fash<span class="text-[#E8846B]">Beats</span>
+                </span>
+                <span id="headerBadge" class="user-badge hidden md:inline-flex"></span>
+            </div>
+            <nav class="hidden md:flex items-center space-x-7">
+                <button onclick="playSwishSFX();switchTab('home')" class="font-bold text-sm text-white transition flex items-center space-x-2">
+                    <i data-lucide="house" class="w-4 h-4"></i>
+                    <span>Home</span>
+                </button>
+                <button onclick="playSwishSFX();switchTab('search')" class="font-bold text-sm text-[#B8A29C] hover:text-white transition flex items-center space-x-2">
+                    <i data-lucide="search" class="w-4 h-4"></i>
+                    <span>Cari</span>
+                </button>
+                <button onclick="playSwishSFX();switchTab('library')" class="font-bold text-sm text-[#B8A29C] hover:text-white transition flex items-center space-x-2">
+                    <i data-lucide="bookmark" class="w-4 h-4"></i>
+                    <span>Library</span>
+                </button>
+            </nav>
+            <button onclick="playSwishSFX();switchTab('settings')" class="p-2 rounded-full glass-light">
+                <i data-lucide="settings" class="w-4 h-4 text-[#E8846B]"></i>
+            </button>
+        </header>
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 pb-32 relative">
+            <section id="view-home" class="space-y-8 transition-all duration-300">
+                <div class="home-hero relative rounded-3xl p-6 md:p-8 shadow-2xl border border-[#3D2621]">
+                    <div class="relative z-10 max-w-lg space-y-2">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span id="homeGreetingTime" class="px-3 py-1 rounded-full glass-light text-[#F2A895] text-[10px] font-black tracking-widest uppercase backdrop-blur border border-[#E8846B]/20">Pagi</span>
+                            <span id="homeUserBadge" class="user-badge"></span>
+                        </div>
+                        <h1 id="homeGreetingText" class="text-2xl md:text-4xl font-black leading-tight tracking-tight text-white drop-shadow-lg">🌅 Selamat Pagi</h1>
+                        <p id="homeGreetingSub" class="text-xs md:text-sm text-[#B8A29C] font-semibold leading-relaxed drop-shadow">Dari Jakarta, Indonesia • WIB</p>
+                        <div class="flex gap-2 pt-2 flex-wrap">
+                            <button onclick="playClickSFX();switchTab('search')" class="px-4 py-2.5 bg-[#E8846B] text-white hover:bg-[#F2A895] font-bold text-xs uppercase tracking-wider rounded-2xl transition shadow-lg flex items-center space-x-2">
+                                <i data-lucide="search" class="w-4 h-4"></i>
+                                <span>Cari Musik</span>
+                            </button>
+                            <button onclick="playClickSFX();startMix()" class="px-4 py-2.5 glass text-white font-bold text-xs uppercase tracking-wider rounded-2xl transition flex items-center space-x-2 border border-[#E8846B]/30">
+                                <i data-lucide="wand-sparkles" class="w-4 h-4"></i>
+                                <span>Start Mix</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-black tracking-tight text-white">Speed Dial</h2>
+                            <p class="text-[11px] font-semibold text-[#B8A29C] mt-0.5">Lagu favorit yang kamu pin</p>
+                        </div>
+                        <button onclick="playClickSFX();openPinSheet()" class="text-xs font-bold text-[#E8846B] flex items-center gap-1.5">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            <span>Tambah</span>
+                        </button>
+                    </div>
+                    <div id="speedDialGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3"></div>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-black tracking-tight text-white">Quick Picks</h2>
+                            <p class="text-[11px] font-semibold text-[#B8A29C] mt-0.5">Putar cepat dari playlist teratas Indonesia</p>
+                        </div>
+                        <button onclick="playClickSFX();refreshQuickPicks()" class="text-xs font-bold text-[#E8846B] flex items-center gap-1.5">
+                            <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                            <span>Refresh</span>
+                        </button>
+                    </div>
+                    <div id="quickPicksShelf" class="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-3 scroll-smooth"></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-black tracking-tight text-white">Trending Playlist</h2>
+                        <p class="text-[11px] font-semibold text-[#B8A29C] mt-0.5">Playlist yang lagi viral</p>
+                    </div>
+                    <div id="trendingPlaylistShelf" class="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2"></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-black tracking-tight text-white">Covers And Remix</h2>
+                        <p class="text-[11px] font-semibold text-[#B8A29C] mt-0.5">Versi cover dan remix populer</p>
+                    </div>
+                    <div id="coversRemixShelf" class="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2"></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-black tracking-tight text-white">Trending Songs For You</h2>
+                        <p class="text-[11px] font-semibold text-[#B8A29C] mt-0.5">Rekomendasi sesuai selera kamu</p>
+                    </div>
+                    <div id="trendingForYouShelf" class="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2"></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-black tracking-tight text-white">New Releases</h2>
+                        <p class="text-[11px] font-semibold text-[#B8A29C] mt-0.5">Lagu yang baru rilis</p>
+                    </div>
+                    <div id="newReleaseShelf" class="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2"></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-black tracking-tight text-white">Pop</h2>
+                        <p class="text-[11px] font-semibold text-[#B8A29C] mt-0.5">Pop Indonesia terbaik</p>
+                    </div>
+                    <div id="popShelf" class="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2"></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-black tracking-tight text-white">All Time Hits</h2>
+                        <p class="text-[11px] font-semibold text-[#B8A29C] mt-0.5">Lagu legendaris yang tak lekang waktu</p>
+                    </div>
+                    <div id="allTimeHitsShelf" class="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2"></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-black tracking-tight text-white">Artis Populer</h2>
+                        <p class="text-[11px] font-semibold text-[#B8A29C] mt-0.5">Artis yang sering diputar</p>
+                    </div>
+                    <div id="artistShelf" class="flex gap-5 overflow-x-auto no-scrollbar snap-x pb-2"></div>
+                </div>
+            </section>
+            <section id="view-search" class="fixed inset-0 pt-24 pb-32 px-4 md:px-8 overflow-y-auto transform translate-x-full opacity-0 pointer-events-none transition-all duration-300 ease-in-out bg-[#1A0F0D] z-20 hidden">
+                <div class="max-w-5xl mx-auto space-y-6">
+                    <div class="sticky top-0 z-30 bg-[#1A0F0D]/90 backdrop-blur-md pt-2 pb-4 border-b border-[#3D2621]">
+                        <div class="relative max-w-2xl mx-auto">
+                            <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-[#B8A29C] w-4 h-4"></i>
+                            <input type="text" id="searchInput" placeholder="Cari lagu, album, artis..." autocomplete="off" class="w-full glass border border-[#3D2621] text-white font-bold text-sm rounded-full py-4 pl-14 pr-6 focus:border-[#E8846B] focus:ring-4 focus:ring-[#E8846B]/10 transition placeholder-[#B8A29C]">
+                        </div>
+                    </div>
+                    <div id="categorySection" class="space-y-4">
+                        <h2 class="text-xl font-black tracking-tight text-white">Jelajahi Genre</h2>
+                        <div id="categoryGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+                    </div>
+                    <div id="searchResultsSection" class="hidden space-y-6">
+                        <div class="space-y-3">
+                            <h2 class="text-lg font-black tracking-tight text-white">Hasil Pencarian</h2>
+                            <div id="searchResults" class="space-y-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="view-library" class="hidden space-y-6 max-w-3xl mx-auto transition-all duration-300">
+                <div class="flex items-center justify-between border-b border-[#3D2621] pb-4">
+                    <h2 class="text-2xl font-black tracking-tight text-white">Library</h2>
+                    <div class="flex gap-2">
+                        <button onclick="playClickSFX();openPinSheet()" class="text-xs font-bold text-[#F2A895] flex items-center gap-1.5 px-3 py-1.5 glass-light rounded-xl border border-[#E8846B]/20">
+                            <i data-lucide="pin" class="w-3.5 h-3.5"></i>
+                            <span>Pin</span>
+                        </button>
+                        <button onclick="playClickSFX();openOfflinePage()" class="text-xs font-bold text-[#F2A895] flex items-center gap-1.5 px-3 py-1.5 glass-light rounded-xl border border-[#E8846B]/20">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>Offline</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                        <button data-tab="liked" onclick="playClickSFX();switchLibraryTab('liked')" class="lib-tab active px-3 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap">Disukai</button>
+                        <button data-tab="pinned" onclick="playClickSFX();switchLibraryTab('pinned')" class="lib-tab px-3 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap">Dipin</button>
+                        <button data-tab="queue" onclick="playClickSFX();switchLibraryTab('queue')" class="lib-tab px-3 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap">Antrian</button>
+                        <button data-tab="recent" onclick="playClickSFX();switchLibraryTab('recent')" class="lib-tab px-3 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap">Recent Play</button>
+                    </div>
+                    <div id="libraryContent" class="space-y-1"></div>
+                </div>
+            </section>
+            <section id="view-settings" class="hidden space-y-6 max-w-2xl mx-auto transition-all duration-300">
+                <h2 class="text-2xl font-black border-b border-[#3D2621] pb-4 tracking-tight text-white">Setelan</h2>
+                <div class="glass rounded-3xl p-5 glossy space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="relative">
+                            <div class="w-14 h-14 rounded-2xl overflow-hidden bg-[#2A1815] border-2 border-[#E8846B]/40 shadow-lg flex items-center justify-center">
+                                <img src="https://cloud.yardansh.com/znNBqH.png?raw" alt="logo" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'font-black text-2xl text-[#E8846B]\'>F</span>';">
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#E8846B] border-2 border-[#1A0F0D] flex items-center justify-center">
+                                <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="font-black text-lg text-white">Fash Beats User</h3>
+                                <span id="settingsUserBadge" class="user-badge"></span>
+                            </div>
+                            <p class="text-[11px] text-[#B8A29C] font-semibold mt-1">
+                                Anggota sejak <span id="settingsMemberSince">-</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-[#3D2621] space-y-2">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[10px] font-black uppercase tracking-widest text-[#B8A29C]">Device ID</p>
+                            <button onclick="playClickSFX();copyDeviceId()" class="text-[10px] font-black text-[#E8846B] flex items-center gap-1">
+                                <i data-lucide="copy" class="w-3 h-3"></i>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                        <div id="settingsDeviceId" class="device-id-chip">-</div>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-base text-white">Tema</h3>
+                            <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Ubah mode gelap atau terang</p>
+                        </div>
+                        <button id="themeToggleBtn" onclick="playClickSFX();toggleTheme()" class="px-5 py-2.5 glass-light rounded-2xl text-xs font-bold flex items-center space-x-2 border border-[#E8846B]/20">
+                            <i data-lucide="moon" class="w-4 h-4"></i>
+                            <span>Dark</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-base text-white">Liquid Glass</h3>
+                            <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Blur kaca &vibrancy</p>
+                        </div>
+                        <button id="liquidGlassToggle" onclick="playClickSFX();toggleLiquidGlass()" class="relative w-12 h-7 rounded-full transition-colors duration-300 flex-shrink-0" style="background-color:#3D2621">
+                            <span id="liquidGlassKnob" class="absolute top-0.5 left-0.5 w-6 h-6 rounded-full bg-[#E8846B] shadow-md transition-transform duration-300"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-base text-white">Auto Dark Theme</h3>
+                            <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Ikuti tema sistem perangkat</p>
+                        </div>
+                        <button id="autoThemeToggle" onclick="playClickSFX();toggleAutoTheme()" class="relative w-12 h-7 rounded-full transition-colors duration-300 flex-shrink-0" style="background-color:#3D2621">
+                            <span id="autoThemeKnob" class="absolute top-0.5 left-0.5 w-6 h-6 rounded-full bg-[#E8846B] shadow-md transition-transform duration-300"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-base text-white">Mode Perangkat Rendah</h3>
+                            <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Matikan blur, animasi &ambient</p>
+                        </div>
+                        <button id="lowDeviceToggle" onclick="playClickSFX();toggleLowDeviceMode()" class="relative w-12 h-7 rounded-full transition-colors duration-300 flex-shrink-0" style="background-color:#3D2621">
+                            <span id="lowDeviceKnob" class="absolute top-0.5 left-0.5 w-6 h-6 rounded-full bg-[#E8846B] shadow-md transition-transform duration-300"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy space-y-3">
+                    <div>
+                        <h3 class="font-bold text-base text-white">Font</h3>
+                        <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Pilih jenis huruf</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button data-font="jakarta" onclick="playClickSFX();pickFont('jakarta')" class="font-option px-3 py-2.5 glass-light rounded-2xl text-xs font-bold transition active:scale-95 border border-transparent">Jakarta</button>
+                        <button data-font="poppins" onclick="playClickSFX();pickFont('poppins')" class="font-option px-3 py-2.5 glass-light rounded-2xl text-xs font-bold transition active:scale-95 border border-transparent">Poppins</button>
+                        <button data-font="inter" onclick="playClickSFX();pickFont('inter')" class="font-option px-3 py-2.5 glass-light rounded-2xl text-xs font-bold transition active:scale-95 border border-transparent">Inter</button>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy space-y-4">
+                    <div>
+                        <h3 class="font-bold text-base text-white">Bentuk Progress Bar</h3>
+                        <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Gaya garis di full player</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button data-bar="default" onclick="playClickSFX();pickBarStyle('default')" class="bar-option px-3 py-4 glass-light rounded-2xl transition active:scale-95 flex flex-col items-center gap-2 border border-transparent">
+                            <div class="w-full h-1.5 bg-[#E8846B]/40 rounded-full"></div>
+                            <span class="text-[10px] font-bold">Default</span>
+                        </button>
+                        <button data-bar="squiggly" onclick="playClickSFX();pickBarStyle('squiggly')" class="bar-option px-3 py-4 glass-light rounded-2xl transition active:scale-95 flex flex-col items-center gap-2 border border-transparent">
+                            <svg viewBox="0 0 40 8" class="w-full h-2">
+                                <path d="M0 4 Q2.5 0, 5 4 T10 4 T15 4 T20 4 T25 4 T30 4 T35 4 T40 4" fill="none" stroke="rgba(232,132,107,0.5)" stroke-width="1.5"/>
+                            </svg>
+                            <span class="text-[10px] font-bold">Squiggly</span>
+                        </button>
+                        <button data-bar="slim" onclick="playClickSFX();pickBarStyle('slim')" class="bar-option px-3 py-4 glass-light rounded-2xl transition active:scale-95 flex flex-col items-center gap-2 border border-transparent">
+                            <div class="w-full h-0.5 bg-[#E8846B]/50 rounded-full"></div>
+                            <span class="text-[10px] font-bold">Slim</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy space-y-4">
+                    <div>
+                        <h3 class="font-bold text-base text-white">Animasi Lirik V2 Legacy</h3>
+                        <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Atur efek bounce &kehalusan fill kata</p>
+                    </div>
+                    <div class="flex items-center justify-between py-2">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm text-white">Enable Line Bounce Effect</h4>
+                            <p class="text-[11px] text-[#B8A29C] font-semibold mt-0.5">Baris aktif memantul masuk</p>
+                        </div>
+                        <button id="lyricBounceToggle" onclick="playClickSFX();toggleLyricBounce()" class="relative w-12 h-7 rounded-full transition-colors duration-300 flex-shrink-0" style="background-color:#3D2621">
+                            <span id="lyricBounceKnob" class="absolute top-0.5 left-0.5 w-6 h-6 rounded-full bg-[#E8846B] shadow-md transition-transform duration-300"></span>
+                        </button>
+                    </div>
+                    <div class="space-y-2 pt-2 border-t border-[#3D2621]">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-sm text-white">Fill Transform Smoothness</h4>
+                            <span id="lyricFillValue" class="text-[11px] font-black text-[#B8A29C] tabular-nums">0.25s</span>
+                        </div>
+                        <input type="range" id="lyricFillSlider" min="0.05" max="1.5" step="0.05" value="0.25" class="w-full accent-[#E8846B]" oninput="playClickSFX();setLyricFill(this.value)">
+                        <p class="text-[10px] text-[#B8A29C] font-semibold">Kiri = cepat &responsif • Kanan = halus &dramatis</p>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-base text-white">Skip Silence</h3>
+                            <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Lewati otomatis bagian hening pada lagu</p>
+                        </div>
+                        <button id="skipSilenceToggle" onclick="playClickSFX();toggleSkipSilence()" class="relative w-12 h-7 rounded-full transition-colors duration-300 flex-shrink-0" style="background-color:#3D2621">
+                            <span id="skipSilenceKnob" class="absolute top-0.5 left-0.5 w-6 h-6 rounded-full bg-[#E8846B] shadow-md transition-transform duration-300"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy space-y-4">
+                    <div>
+                        <h3 class="font-bold text-base text-white">Bahasa Web Music</h3>
+                        <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Bahasa untuk hasil pencarian</p>
+                    </div>
+                    <div id="languagePicker" class="relative">
+                        <button onclick="playClickSFX();toggleLanguageDropdown()" class="w-full glass-light rounded-2xl px-4 py-3 flex items-center justify-between transition active:scale-[0.99] border border-[#E8846B]/20">
+                            <div class="flex items-center gap-3">
+                                <span id="selectedLangFlag" class="text-lg">🇮🇩</span>
+                                <span id="selectedLangName" class="text-sm font-bold">Bahasa Indonesia</span>
+                            </div>
+                            <i id="langChevron" data-lucide="chevron-down" class="w-4 h-4 text-[#B8A29C] transition-transform duration-300"></i>
+                        </button>
+                        <div id="languageDropdown" class="absolute top-full left-0 right-0 mt-2 glass border border-[#3D2621] rounded-2xl shadow-2xl overflow-hidden hidden z-50 max-h-72 overflow-y-auto no-scrollbar">
+                            <div id="languageList" class="py-1"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy space-y-4">
+                    <div>
+                        <h3 class="font-bold text-base text-white">Penyimpanan</h3>
+                        <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Kelola lagu offline</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <div>
+                            <p class="font-bold text-white">
+                                <span id="storageCount">0</span>
+                                lagu tersimpan
+                            </p>
+                            <p class="text-[#B8A29C] mt-0.5">
+                                <span id="storageSize">0 MB</span>
+                                terpakai
+                            </p>
+                        </div>
+                        <button onclick="playClickSFX();clearAllOffline()" class="px-4 py-2 bg-[#E8846B]/15 border border-[#E8846B]/30 hover:bg-[#E8846B]/25 rounded-xl text-[11px] font-bold text-[#F2A895]">Hapus Semua</button>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-5 glossy">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-base text-white">Reset Data</h3>
+                            <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Hapus riwayat dan pengaturan</p>
+                        </div>
+                        <button onclick="playClickSFX();handleResetData()" class="px-5 py-2.5 bg-[#E8846B]/15 border border-[#E8846B]/30 hover:bg-[#E8846B]/25 rounded-2xl text-xs font-bold text-[#F2A895] flex items-center space-x-2">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl p-6 space-y-4 glossy">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-14 h-14 rounded-2xl overflow-hidden bg-[#2A1815] border border-[#E8846B]/30 shadow-lg flex items-center justify-center">
+                            <img src="https://cloud.yardansh.com/znNBqH.png?raw" alt="logo" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'font-black text-2xl text-[#E8846B]\'>F</span>';">
+                        </div>
+                        <div>
+                            <h3 class="font-black text-lg flex items-center space-x-2 text-white">
+                                <span>Fash Beats</span>
+                                <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-[#E8846B]/20 text-[#F2A895] border border-[#E8846B]/30">v1.2.5</span>
+                            </h3>
+                            <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Express.js &YouTube Music</p>
+                        </div>
+                    </div>
+                    <div class="pt-4 text-xs font-semibold space-y-3 border-t border-[#3D2621]">
+                        <div class="flex justify-between">
+                            <span class="text-[#B8A29C]">Pengembang</span>
+                            <span class="font-black text-white">Faddlan</span>
+                        </div>
+                        <div class="pt-2 flex space-x-3">
+                            <a href="https://wa.me/6285124441729" target="_blank" onclick="playClickSFX()" class="flex-1 py-3 glass-light rounded-2xl text-xs font-bold text-[#F2A895] flex items-center justify-center space-x-2 border border-[#E8846B]/20">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                <span>WhatsApp</span>
+                            </a>
+                            <a href="https://t.me/faddlanofc" target="_blank" onclick="playClickSFX()" class="flex-1 py-3 glass-light rounded-2xl text-xs font-bold text-[#F2A895] flex items-center justify-center space-x-2 border border-[#E8846B]/20">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                                <span>Telegram</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <section id="offlinePage" class="offline-page">
+            <div class="sticky top-0 z-30 glass border-b border-[#3D2621] px-4 py-3 flex items-center justify-between" style="padding-top:calc(0.75rem + env(safe-area-inset-top))">
+                <button onclick="playClickSFX();closeOfflinePage()" class="w-9 h-9 rounded-full glass-light flex items-center justify-center border border-[#E8846B]/20">
+                    <i data-lucide="arrow-left" class="w-4 h-4 text-[#E8846B]"></i>
+                </button>
+                <div class="text-center">
+                    <h2 class="font-black text-base text-white">Offline</h2>
+                    <p class="text-[10px] text-[#B8A29C] font-semibold">
+                        <span id="offlinePageCount">0</span>
+                        lagu
+                    </p>
+                </div>
+                <button onclick="playClickSFX();clearAllOffline()" class="w-9 h-9 rounded-full glass-light flex items-center justify-center border border-[#E8846B]/20">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5 text-[#E8846B]"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div id="offlinePageContent" class="space-y-1"></div>
+            </div>
+        </section>
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 glass border-t border-[#3D2621] px-6 flex items-center justify-around" style="padding-bottom:calc(0.75rem + env(safe-area-inset-bottom));padding-top:0.75rem">
+            <button id="nav-home" onclick="playSwishSFX();switchTab('home')" class="flex flex-col items-center space-y-1 text-white transition">
+                <i data-lucide="house" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold">Home</span>
+            </button>
+            <button id="nav-search" onclick="playSwishSFX();switchTab('search')" class="flex flex-col items-center space-y-1 text-[#B8A29C] transition">
+                <i data-lucide="search" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold">Cari</span>
+            </button>
+            <button id="nav-library" onclick="playSwishSFX();switchTab('library')" class="flex flex-col items-center space-y-1 text-[#B8A29C] transition">
+                <i data-lucide="bookmark" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold">Library</span>
+            </button>
+            <button id="nav-settings" onclick="playSwishSFX();switchTab('settings')" class="flex flex-col items-center space-y-1 text-[#B8A29C] transition">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold">Setelan</span>
+            </button>
+        </nav>
+        <div id="miniPlayer" class="hidden fixed bottom-20 md:bottom-4 left-3 right-3 md:left-8 md:right-8 z-40 glass border border-[#3D2621] p-2.5 rounded-2xl flex items-center justify-between shadow-2xl transform translate-y-full transition-all duration-500" style="bottom:calc(5rem + env(safe-area-inset-bottom))">
+            <div class="flex items-center space-x-3 cursor-pointer flex-1 min-w-0" onclick="playSwishSFX();openFullPlayer()">
+                <div class="relative w-11 h-11 flex-none">
+                    <img id="miniThumb" src="" class="w-11 h-11 rounded-xl object-cover bg-[#2A1815]" alt="Cover" onerror="this.src='https://via.placeholder.com/100/2A1815/E8846B?text=?'">
+                    <div id="miniPlayingBars" class="hidden absolute -bottom-1 -right-1 glass rounded-full p-1">
+                        <div class="playing-bars">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="truncate flex-1 min-w-0">
+                    <h4 id="miniTitle" class="text-sm font-black truncate text-white">Judul Lagu</h4>
+                    <p id="miniArtist" class="text-xs font-semibold text-[#B8A29C] truncate">Nama Artis</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-1 flex-none">
+                <button id="miniPlayBtn" onclick="event.stopPropagation();playClickSFX();togglePlay()" class="w-10 h-10 rounded-full bg-[#E8846B] text-white flex items-center justify-center shadow-lg active:scale-95 transition">
+                    <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                </button>
+                <button onclick="event.stopPropagation();playClickSFX();playNextTrack()" class="p-2 text-[#B8A29C] active:scale-95 transition">
+                    <i data-lucide="skip-forward" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+        <div id="fullPlayer" class="fixed inset-0 z-50 bg-[#1A0F0D] text-white transform translate-y-full transition-transform duration-500 ease-out overflow-hidden">
+            <div id="ambientBackground" class="ambient"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-[#1A0F0D]/40 via-[#1A0F0D]/70 to-[#1A0F0D] z-[1]"></div>
+            <div class="relative z-10 h-full flex flex-col pt-4 pb-4 px-5" style="padding-top:calc(1rem + env(safe-area-inset-top));padding-bottom:calc(1rem + env(safe-area-inset-bottom))">
+                <div class="flex items-center justify-between mb-4">
+                    <button onclick="playSwishSFX();closeFullPlayer()" class="w-10 h-10 rounded-full glass-light flex items-center justify-center active:scale-95 transition border border-[#E8846B]/20">
+                        <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                    </button>
+                    <div class="text-center">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-[#B8A29C]">Sedang Diputar</p>
+                        <p id="fullArtistTop" class="text-xs font-black text-[#F2A895] mt-0.5 truncate max-w-[180px]">Artis</p>
+                    </div>
+                    <button onclick="playClickSFX();openOptionsSheet(event)" class="w-10 h-10 rounded-full glass-light flex items-center justify-center active:scale-95 transition border border-[#E8846B]/20">
+                        <i data-lucide="more-vertical" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="flex-1 flex items-center justify-center min-h-0 mb-5">
+                    <div class="relative w-full max-w-[340px] aspect-square">
+                        <div class="cover-glow"></div>
+                        <img id="fullThumb" src="" class="w-full h-full rounded-3xl object-cover shadow-2xl border border-[#3D2621] relative z-10" alt="Cover" onerror="this.src='https://via.placeholder.com/400/2A1815/E8846B?text=?'">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                        <div class="min-w-0 flex-1">
+                            <h2 id="fullTitle" class="text-2xl font-black tracking-tight truncate text-white">Judul Lagu</h2>
+                            <p id="fullArtist" class="text-sm font-semibold text-[#B8A29C] truncate mt-1">Nama Artis</p>
+                        </div>
+                        <div class="flex items-center gap-1 flex-none">
+                            <button onclick="playClickSFX();toggleLike()" class="w-10 h-10 rounded-full glass-light flex items-center justify-center active:scale-95 transition border border-[#E8846B]/20">
+                                <span id="likeIcon">
+                                    <i data-lucide="heart" class="w-5 h-5 text-[#B8A29C]"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <input type="range" id="progressBar" value="0" min="0" max="100" step="0.1" class="w-full">
+                        <div class="flex justify-between text-[11px] font-bold text-[#B8A29C] tabular-nums">
+                            <span id="currentTime">0:00</span>
+                            <span id="durationTime">0:00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <button onclick="playClickSFX();toggleShuffle()" id="shuffleBtn" class="w-10 h-10 flex items-center justify-center action-inactive active:scale-95 transition">
+                        <i data-lucide="shuffle" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="playClickSFX();playPrevTrack()" class="w-14 h-14 flex items-center justify-center active:scale-95 transition">
+                        <i data-lucide="skip-back" class="w-8 h-8"></i>
+                    </button>
+                    <button id="fullPlayBtn" onclick="playClickSFX();togglePlay()" class="w-16 h-16 rounded-full bg-[#E8846B] text-white flex items-center justify-center shadow-2xl active:scale-95 transition">
+                        <i data-lucide="play" class="w-7 h-7 ml-1"></i>
+                    </button>
+                    <button onclick="playClickSFX();playNextTrack()" class="w-14 h-14 flex items-center justify-center active:scale-95 transition">
+                        <i data-lucide="skip-forward" class="w-8 h-8"></i>
+                    </button>
+                    <button onclick="playClickSFX();cycleRepeat()" id="repeatBtn" class="w-10 h-10 flex items-center justify-center action-inactive active:scale-95 transition relative">
+                        <span id="repeatIcon">
+                            <i data-lucide="repeat" class="w-5 h-5"></i>
+                        </span>
+                        <span id="repeatBadge" class="hidden absolute -top-0.5 -right-0.5 text-[8px] font-black bg-[#E8846B] text-white rounded-full w-3.5 h-3.5 flex items-center justify-center">1</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <button onclick="playClickSFX();showLyrics()" class="glass-light rounded-2xl py-3 flex flex-col items-center gap-1 active:scale-95 transition border border-[#E8846B]/15">
+                        <i data-lucide="align-left" class="w-4 h-4 text-[#F2A895]"></i>
+                        <span class="text-[10px] font-bold">Lirik</span>
+                    </button>
+                    <button onclick="playClickSFX();showUpNext()" class="glass-light rounded-2xl py-3 flex flex-col items-center gap-1 active:scale-95 transition border border-[#E8846B]/15">
+                        <i data-lucide="list" class="w-4 h-4 text-[#F2A895]"></i>
+                        <span class="text-[10px] font-bold">Up Next</span>
+                    </button>
+                    <button onclick="playClickSFX();showDevices()" class="glass-light rounded-2xl py-3 flex flex-col items-center gap-1 active:scale-95 transition relative border border-[#E8846B]/15">
+                        <i data-lucide="tv" class="w-4 h-4 text-[#F2A895]"></i>
+                        <span class="text-[10px] font-bold">Perangkat</span>
+                        <span class="absolute top-1.5 right-2 text-[8px] font-black px-1.5 py-0.5 rounded-full bg-[#E8846B] text-white">SOON</span>
+                    </button>
+                </div>
+                <div class="flex items-center justify-center gap-3 px-4">
+                    <i data-lucide="volume-1" class="w-3.5 h-3.5 text-[#B8A29C]"></i>
+                    <input type="range" id="volumeBar" min="0" max="1" step="0.01" value="1" class="flex-1 max-w-xs">
+                    <i data-lucide="volume-2" class="w-3.5 h-3.5 text-[#B8A29C]"></i>
+                </div>
+            </div>
+        </div>
+        <div id="lyricsOverlay" class="fixed inset-0 z-[110] translate-y-full transition-transform duration-500 ease-out overflow-hidden">
+            <div id="lyricsAmbient" class="ambient" style="opacity:0.6"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-[#1A0F0D]/60 via-[#1A0F0D]/85 to-[#1A0F0D] z-[1]"></div>
+            <div class="relative z-10 h-full flex flex-col" style="padding-top:calc(1rem + env(safe-area-inset-top));padding-bottom:calc(1rem + env(safe-area-inset-bottom))">
+                <div class="flex items-center justify-between px-5 mb-4">
+                    <button onclick="playSwishSFX();closeLyrics()" class="w-10 h-10 rounded-full glass-light flex items-center justify-center border border-[#E8846B]/20">
+                        <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                    </button>
+                    <div class="text-center">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-[#B8A29C]">Lirik</p>
+                        <p id="lyricsTrackTitle" class="text-xs font-black text-[#F2A895] mt-0.5 truncate max-w-[200px]">Judul</p>
+                    </div>
+                    <button onclick="playClickSFX();closeLyrics()" class="w-10 h-10 rounded-full glass-light flex items-center justify-center border border-[#E8846B]/20">
+                        <i data-lucide="more-vertical" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div id="lyricsContent" class="flex-1 overflow-y-auto no-scrollbar px-6">
+                    <div class="py-8 text-center text-[#B8A29C] text-sm">Memuat lirik...</div>
+                </div>
+                <div class="px-5 pt-3 pb-2 border-t border-[#3D2621]">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="relative flex-none">
+                            <img id="lyricsMiniThumb" src="" class="w-11 h-11 rounded-xl object-cover bg-[#2A1815]" onerror="this.src='https://via.placeholder.com/100/2A1815/E8846B?text=?'">
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <h4 id="lyricsMiniTitle" class="text-sm font-black truncate text-white">Judul</h4>
+                            <p id="lyricsMiniArtist" class="text-xs font-semibold text-[#B8A29C] truncate">Artis</p>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="playClickSFX();playPrevTrack()" class="w-9 h-9 flex items-center justify-center">
+                                <i data-lucide="skip-back" class="w-5 h-5"></i>
+                            </button>
+                            <button id="lyricsPlayBtn" onclick="playClickSFX();togglePlay()" class="w-11 h-11 rounded-full bg-[#E8846B] text-white flex items-center justify-center active:scale-95 transition">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </button>
+                            <button onclick="playClickSFX();playNextTrack()" class="w-9 h-9 flex items-center justify-center">
+                                <i data-lucide="skip-forward" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="upNextOverlay" class="fixed inset-0 z-[110] translate-y-full transition-transform duration-500 ease-out overflow-hidden">
+            <div id="upNextAmbient" class="ambient" style="opacity:0.5"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-[#1A0F0D]/60 via-[#1A0F0D]/90 to-[#1A0F0D] z-[1]"></div>
+            <div class="relative z-10 h-full flex flex-col" style="padding-top:calc(1rem + env(safe-area-inset-top));padding-bottom:calc(1rem + env(safe-area-inset-bottom))">
+                <div class="flex items-center justify-between px-5 mb-4">
+                    <button onclick="playSwishSFX();closeUpNext()" class="w-10 h-10 rounded-full glass-light flex items-center justify-center border border-[#E8846B]/20">
+                        <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                    </button>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-[#B8A29C]">Selanjutnya</p>
+                    <button onclick="playClickSFX();loadAutoRecommendations()" class="w-10 h-10 rounded-full glass-light flex items-center justify-center border border-[#E8846B]/20">
+                        <i data-lucide="rotate-cw" class="w-4 h-4 text-[#E8846B]"></i>
+                    </button>
+                </div>
+                <div class="px-5 pb-3">
+                    <h2 class="text-2xl font-black tracking-tight text-white">Up Next</h2>
+                    <p class="text-xs font-semibold text-[#B8A29C] mt-1" id="upNextSubtitle">Rekomendasi berdasarkan lagu ini</p>
+                </div>
+                <div id="upNextList" class="flex-1 overflow-y-auto no-scrollbar px-4 pb-6 space-y-1"></div>
+            </div>
+        </div>
+        <div id="optionsBackdrop" class="sheet-backdrop" onclick="closeOptionsSheet()"></div>
+        <div id="optionsSheet" class="bottom-sheet" style="max-height:68vh">
+            <div class="glass border border-[#3D2621] rounded-t-3xl rounded-b-none px-4 pt-3 pb-2 glossy" style="max-height:68vh;overflow-y:auto" onclick="event.stopPropagation()">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center gap-3 px-2 pb-4 mb-2 border-b border-[#3D2621]">
+                    <img id="sheetThumb" src="" class="w-14 h-14 rounded-xl object-cover bg-[#2A1815] flex-none" alt="Cover" onerror="this.src='https://via.placeholder.com/100/2A1815/E8846B?text=?'">
+                    <div class="min-w-0 flex-1">
+                        <h4 id="sheetTitle" class="text-base font-black truncate text-white">Judul Lagu</h4>
+                        <p id="sheetArtist" class="text-xs font-semibold text-[#B8A29C] truncate mt-0.5">Nama Artis</p>
+                    </div>
+                    <button onclick="playClickSFX();closeOptionsSheet();toggleLike()" class="w-9 h-9 rounded-full glass-light flex items-center justify-center border border-[#E8846B]/20">
+                        <span id="sheetLikeIcon">
+                            <i data-lucide="heart" class="w-4 h-4"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();showLyrics()">
+                    <div class="icon-box">
+                        <i data-lucide="align-left" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">Lirik</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();showUpNext()">
+                    <div class="icon-box">
+                        <i data-lucide="list" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">Up Next</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();openSleepSheet()">
+                    <div class="icon-box">
+                        <i data-lucide="moon" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">Sleep Timer</span>
+                    <span id="sleepActiveLabel" class="hidden text-[10px] font-black px-2 py-0.5 rounded-full bg-[#E8846B] text-white">ON</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();togglePin()">
+                    <div class="icon-box">
+                        <i data-lucide="pin" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">
+                        <span id="pinMenuText">Pin ke Speed Dial</span>
+                    </span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();downloadCurrentTrack()">
+                    <div class="icon-box">
+                        <span id="downloadMenuIcon">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                        </span>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">
+                        <span id="downloadMenuText">Simpan Offline</span>
+                    </span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();addToQueue()">
+                    <div class="icon-box">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">Tambah ke Antrian</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();startMix()">
+                    <div class="icon-box">
+                        <i data-lucide="wand-sparkles" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">Start Mix</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();triggerPiP()">
+                    <div class="icon-box">
+                        <i data-lucide="picture-in-picture-2" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">Picture in Picture</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();openArtistInfo()">
+                    <div class="icon-box">
+                        <i data-lucide="info" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">Info Artis</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();copyTrackLink()">
+                    <div class="icon-box">
+                        <i data-lucide="share-2" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">Bagikan</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="sheet-item" onclick="playClickSFX();closeOptionsSheet();openYouTube()">
+                    <div class="icon-box">
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-bold flex-1 text-white">Buka di YouTube</span>
+                    <i data-lucide="arrow-up-right" class="w-4 h-4 text-[#B8A29C]"></i>
+                </div>
+                <div class="px-2 pb-2 mt-2"></div>
+            </div>
+        </div>
+        <div id="sleepBackdrop" class="sheet-backdrop" onclick="closeSleepSheet()"></div>
+        <div id="sleepSheet" class="bottom-sheet" style="max-height:60vh">
+            <div class="glass border border-[#3D2621] rounded-t-3xl rounded-none px-4 pt-3 pb-2 glossy" style="max-height:60vh;overflow-y:auto">
+                <div class="sheet-handle"></div>
+                <div class="px-2 pb-3 mb-2 border-b border-[#3D2621]">
+                    <h3 class="text-lg font-black tracking-tight text-white">Sleep Timer</h3>
+                    <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Berhenti otomatis setelah waktu yang dipilih</p>
+                </div>
+                <div id="sleepOptions" class="space-y-1 px-1 pb-3"></div>
+            </div>
+        </div>
+        <div id="pinBackdrop" class="sheet-backdrop" onclick="closePinSheet()"></div>
+        <div id="pinSheet" class="bottom-sheet" style="max-height:70vh">
+            <div class="glass border border-[#3D2621] rounded-t-3xl rounded-none px-4 pt-3 pb-4 glossy" style="max-height:70vh;display:flex;flex-direction:column">
+                <div class="sheet-handle"></div>
+                <div class="px-2 pb-3 mb-3 border-b border-[#3D2621] flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-black tracking-tight text-white">Pin ke Speed Dial</h3>
+                        <p class="text-xs font-semibold text-[#B8A29C] mt-0.5">Cari lagu lalu pin untuk akses cepat</p>
+                    </div>
+                    <button onclick="playClickSFX();closePinSheet()" class="w-8 h-8 rounded-full glass-light flex items-center justify-center border border-[#E8846B]/20">
+                        <i data-lucide="x" class="w-4 h-4 text-[#E8846B]"></i>
+                    </button>
+                </div>
+                <div class="px-1 mb-3">
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-[#B8A29C] w-4 h-4"></i>
+                        <input type="text" id="pinSearchInput" placeholder="Cari lagu untuk dipin..." class="w-full glass-light border border-[#3D2621] text-white font-bold text-sm rounded-2xl py-3 pl-11 pr-4 focus:border-[#E8846B] transition placeholder-[#B8A29C]">
+                    </div>
+                </div>
+                <div id="pinSearchResults" class="flex-1 overflow-y-auto no-scrollbar space-y-1 px-1"></div>
+            </div>
+        </div>
+        <div id="artistInfoBackdrop" class="sheet-backdrop" onclick="closeArtistInfo()"></div>
+        <div id="artistInfoSheet" class="bottom-sheet" style="max-height:65vh">
+            <div class="glass border border-[#3D2621] rounded-t-3xl rounded-none px-5 pt-3 pb-5 glossy" style="max-height:65vh;overflow-y:auto">
+                <div class="sheet-handle"></div>
+                <div class="px-1 pb-4 mb-3 border-b border-[#3D2621]">
+                    <h3 class="text-lg font-black tracking-tight text-white">Info Artis</h3>
+                </div>
+                <div id="artistInfoContent" class="text-sm"></div>
+            </div>
+        </div>
+        <div id="sleepCountdown" class="sleep-countdown glass border border-[#E8846B]/20">
+            <i data-lucide="moon" class="w-3.5 h-3.5 text-[#E8846B]"></i>
+            <span id="sleepCountdownText">05:00</span>
+        </div>
+        <div id="toastNotif" class="toast-notif glass border border-[#E8846B]/20">
+            <span id="toastNotifText">Siap</span>
+        </div>
+        <video id="pipVideo" class="hidden" autoplay muted playsinline></video>
+        <canvas id="pipCanvas" width="640" height="640" class="hidden"></canvas>
+        <script>
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            const LANGUAGES = [{
+                code: 'id',
+                name: 'Bahasa Indonesia',
+                flag: '🇮🇩'
+            }, {
+                code: 'en',
+                name: 'English',
+                flag: '🇬🇧'
+            }, {
+                code: 'ms',
+                name: 'Bahasa Melayu',
+                flag: '🇲🇾'
+            }, {
+                code: 'jv',
+                name: 'Basa Jawa',
+                flag: '🇮🇩'
+            }, {
+                code: 'su',
+                name: 'Basa Sunda',
+                flag: '🇮🇩'
+            }, {
+                code: 'ar',
+                name: 'العربية',
+                flag: '🇸🇦'
+            }, {
+                code: 'es',
+                name: 'Español',
+                flag: '🇪🇸'
+            }, {
+                code: 'fr',
+                name: 'Français',
+                flag: '🇫🇷'
+            }, {
+                code: 'de',
+                name: 'Deutsch',
+                flag: '🇩🇪'
+            }, {
+                code: 'it',
+                name: 'Italiano',
+                flag: '🇮🇹'
+            }, {
+                code: 'pt',
+                name: 'Português',
+                flag: '🇵🇹'
+            }, {
+                code: 'ru',
+                name: 'Русский',
+                flag: '🇷🇺'
+            }, {
+                code: 'ja',
+                name: '日本語',
+                flag: '🇯🇵'
+            }, {
+                code: 'ko',
+                name: '한국어',
+                flag: '🇰🇷'
+            }, {
+                code: 'zh',
+                name: '中文',
+                flag: '🇨🇳'
+            }, {
+                code: 'hi',
+                name: 'हिन्दी',
+                flag: '🇮🇳'
+            }, {
+                code: 'th',
+                name: 'ไทย',
+                flag: '🇹🇭'
+            }, {
+                code: 'vi',
+                name: 'Tiếng Việt',
+                flag: '🇻🇳'
+            }, {
+                code: 'tl',
+                name: 'Filipino',
+                flag: '🇵🇭'
+            }, {
+                code: 'nl',
+                name: 'Nederlands',
+                flag: '🇳🇱'
+            }, {
+                code: 'pl',
+                name: 'Polski',
+                flag: '🇵🇱'
+            }, {
+                code: 'tr',
+                name: 'Türkçe',
+                flag: '🇹🇷'
+            }, {
+                code: 'sv',
+                name: 'Svenska',
+                flag: '🇸🇪'
+            }, {
+                code: 'da',
+                name: 'Dansk',
+                flag: '🇩🇰'
+            }, {
+                code: 'fi',
+                name: 'Suomi',
+                flag: '🇫🇮'
+            }, {
+                code: 'no',
+                name: 'Norsk',
+                flag: '🇳🇴'
+            }];
+
+            function playSwishSFX() {
+                try {
+                    if (audioCtx.state === 'suspended')
+                        audioCtx.resume();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    const filter = audioCtx.createBiquadFilter();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(350, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.12);
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+                    filter.frequency.linearRampToValueAtTime(200, audioCtx.currentTime + 0.12);
+                    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.12);
+                } catch (_) {}
+            }
+
+            function playClickSFX() {
+                try {
+                    if (audioCtx.state === 'suspended')
+                        audioCtx.resume();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.05);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                } catch (_) {}
+            }
+
+            function toggleTheme() {
+                const html = document.documentElement;
+                const btn = document.getElementById('themeToggleBtn');
+                const isDark = html.classList.contains('dark');
+                if (isDark) {
+                    html.classList.remove('dark');
+                    document.body.classList.remove('bg-[#1A0F0D]', 'text-white');
+                    document.body.classList.add('bg-zinc-100', 'text-zinc-900');
+                    if (btn)
+                        btn.innerHTML = '<i data-lucide="sun" class="w-4 h-4"></i><span>Light</span>';
+                    localStorage.setItem('fashBeats.theme', 'light');
+                } else {
+                    html.classList.add('dark');
+                    document.body.classList.add('bg-[#1A0F0D]', 'text-white');
+                    document.body.classList.remove('bg-zinc-100', 'text-zinc-900');
+                    if (btn)
+                        btn.innerHTML = '<i data-lucide="moon" class="w-4 h-4"></i><span>Dark</span>';
+                    localStorage.setItem('fashBeats.theme', 'dark');
+                }
+                if (window.lucide)
+                    lucide.createIcons();
+            }
+
+            (function restoreTheme() {
+                try {
+                    if (localStorage.getItem('fashBeats.theme') === 'light') {
+                        document.documentElement.classList.remove('dark');
+                        document.body.classList.remove('bg-[#1A0F0D]', 'text-white');
+                        document.body.classList.add('bg-zinc-100', 'text-zinc-900');
+                    }
+                } catch (_) {}
+            }
+            )();
+
+            (function splashParticles() {
+                const box = document.getElementById('splashParticles');
+                if (!box)
+                    return;
+                for (let i = 0; i < 25; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'splash-particle';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.animationDuration = (3 + Math.random() * 4) + 's';
+                    p.style.animationDelay = (Math.random() * 2) + 's';
+                    p.style.opacity = 0.3 + Math.random() * 0.5;
+                    box.appendChild(p);
+                }
+            }
+            )();
+
+            if (window.lucide)
+                lucide.createIcons();
+
+            window.addEventListener('load', ()=>{
+                const overlay = document.getElementById('welcomeOverlay');
+                if (!overlay)
+                    return;
+                setTimeout(()=>{
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                    setTimeout(()=>overlay.remove(), 700);
+                }
+                , 2600);
+            }
+            );
+
+            setTimeout(()=>{
+                const overlay = document.getElementById('welcomeOverlay');
+                if (overlay) {
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                    setTimeout(()=>overlay.remove(), 700);
+                }
+            }
+            , 4200);
+
+            window.showUpdateBanner = function() {
+                const existing = document.querySelector('.update-banner');
+                if (existing)
+                    existing.remove();
+                const banner = document.createElement('div');
+                banner.className = 'update-banner show';
+                banner.innerHTML = `
+    <button class="update-close" onclick="this.parentElement.classList.remove('show');setTimeout(()=>this.parentElement.remove(),400)">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+    <div class="flex items-start gap-3">
+      <div class="update-icon"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="update-chip">BARU</span>
+          <span class="update-time">v1.2.5 • Hari ini</span>
+        </div>
+        <div class="update-title">Fitur Baru Telah Hadir!</div>
+        <ul class="update-list">
+          <li><b>Recent Play</b> di Library — riwayat lagu yang baru diputar</li>
+          <li><b>Info Artis</b> lengkap dari menu opsi lagu</li>
+          <li>Tema warna baru: <b>Warm Dark</b> yang lebih nyaman</li>
+          <li>Loading screen lebih cantik & halus</li>
+          <li>Performa & stabilitas lebih baik</li>
+        </ul>
+      </div>
+    </div>
+  `;
+                document.body.appendChild(banner);
+                if (window.lucide)
+                    lucide.createIcons();
+                setTimeout(()=>{
+                    if (banner.parentElement) {
+                        banner.classList.remove('show');
+                        setTimeout(()=>banner.remove(), 400);
+                    }
+                }
+                , 12000);
+            }
+            ;
+
+            setTimeout(()=>{
+                if (window.showUpdateBanner)
+                    window.showUpdateBanner();
+            }
+            , 4500);
+        </script>
+        <script src="/app.js"></script>
+    </body>
+</html>
